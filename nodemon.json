@@ -1,0 +1,12 @@
+{
+  "ignore": [
+    "./lib/", 
+    "./lib-esm/", 
+    "./bundles/", 
+    "./README.md"
+  ],
+  "watch": [
+    "./src/"
+  ],
+  "ext": "js,json,ts,tsx"
+}
