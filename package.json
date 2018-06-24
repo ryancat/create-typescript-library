@@ -4,9 +4,10 @@
   "description": "my awesome library",
   "main": "./bundles/myLib.min.js",
   "scripts": {
-    "dev": "npm run dev:tsc && webpack --mode development",
+    "dev": "npm run tslint && npm run dev:tsc && webpack --mode development",
     "dev:tsc": "tsc && tsc -m es6 --outDir lib-esm",
     "dev:watch": "nodemon --exec npm run dev",
+    "tslint": "tslint --project .",
     "build": "npm run dev:tsc && webpack --mode production"
   },
   "repository": "https://github.com/ryancat/create-ts-library.git",

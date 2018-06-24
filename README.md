@@ -12,4 +12,10 @@ This is a repo that setup the basic structure for my (and your) next typescript 
   - `npm run dev:watch` to watch the file changes (by nodemon) and run the build script
   - `npm run build` to generate minimized code for publish
 
+## Useful links
+- Refer to [tslint config](https://palantir.github.io/tslint/usage/configuration/) for tslint configuration details
+- Refer to [nodemon config](https://github.com/remy/nodemon/blob/master/doc/sample-nodemon.md) for nodemon configuration sample
+- Refer to [webpack config](https://webpack.js.org/configuration/) for webpack configuration details
+
+## Special thanks
 *Inspired by the awesome blog post [Compiling and bundling TypeScript libraries with Webpack](https://marcobotto.com/blog/compiling-and-bundling-typescript-libraries-with-webpack/) by Marco Botto*
