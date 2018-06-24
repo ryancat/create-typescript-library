@@ -1,5 +1,5 @@
 ## create-ts-library
-This is a repo that setup the basic structure for my (and your) next typescript library. Simply fork it and start coding!
+This is a repo that setup the basic structure for my (and your) next typescript library. Simply **fork it** and start coding!
 
 ### What it does
 - Use typescript compiler to compile your library into:
