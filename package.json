@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "npm run tslint && npm run dev:tsc && webpack --mode development",
     "dev:tsc": "tsc && tsc -m es6 --outDir lib-esm",
-    "dev:watch": "nodemon --exec npm run dev",
+    "dev:watch": "nodemon --exec 'npm run dev || exit 1'",
     "tslint": "tslint --project .",
     "build": "npm run dev:tsc && webpack --mode production"
   },
