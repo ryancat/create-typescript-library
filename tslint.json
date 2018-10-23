@@ -4,6 +4,9 @@
         "tslint:recommended"
     ],
     "jsRules": {},
-    "rules": {},
+    "rules": {
+        // Overwrite the tsline:recommended rules here
+        "quotemark": [true, "single", "avoid-escape", "avoid-template"]
+    },
     "rulesDirectory": []
 }

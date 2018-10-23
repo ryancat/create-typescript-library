@@ -1,39 +1,36 @@
-const path = require('path')
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const path = require('path');
 
-module.exports = {
-  entry: {
-    'myLib': './src/myLib.ts',
-    'myLib.min': './src/myLib.ts'
-  },
+module.exports = function (env, argv) {
+  const mode = argv.mode || 'development';
+  console.info('running webpack with mode:', mode);
 
-  output: {
-    path: path.resolve(__dirname, 'bundles'),
-    filename: '[name].js',
-    libraryTarget: 'umd',
-    library: 'myLib',
-    umdNamedDefine: true
-  },
-  
-  resolve: {
-    extensions: ['.ts', '.tsx', '.js']
-  },
-  
-  devtool: 'inline-source-map',
-  
-  module: {
-    rules: [{
-      test: /\.tsx?$/,
-      loader: 'ts-loader',
-      exclude: /node_modules/
-    }]
-  },
+  return {
+    mode: mode,
 
-  optimization: {
-    minimizer: [
-      new UglifyJsPlugin({
-        include: /\.min\.js$/
-      })
-    ]
-  }
-}
+    entry: {
+      'myLib': './src/myLib.ts'
+    },
+  
+    output: {
+      path: path.resolve(__dirname, 'dist'),
+      filename: mode === 'production' ? '[name].min.js' : '[name].js',
+      libraryTarget: 'umd',
+      library: 'myLib',
+      umdNamedDefine: true
+    },
+    
+    resolve: {
+      extensions: ['.ts', '.tsx', '.js']
+    },
+    
+    devtool: 'inline-source-map',
+    
+    module: {
+      rules: [{
+        test: /\.tsx?$/,
+        loader: 'ts-loader',
+        exclude: /node_modules/
+      }]
+    }
+  };
+};
