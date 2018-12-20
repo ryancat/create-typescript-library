@@ -7,8 +7,8 @@ import configCallback from '../webpack.config';
 
 const TSC_COMMONJS_PATH = path.resolve(__dirname, '../dist/commonjs/myLib.js');
 const TSC_COMMONJS_SOURCEMAP_PATH = path.resolve(__dirname, '../dist/commonjs/myLib.js.map');
-const TSC_ESM_PATH = path.resolve(__dirname, '../dist/lib-esm/myLib.js');
-const TSC_ESM_SOURCEMAP_PATH = path.resolve(__dirname, '../dist/lib-esm/myLib.js.map');
+const TSC_ESM_PATH = path.resolve(__dirname, '../dist/esm/myLib.js');
+const TSC_ESM_SOURCEMAP_PATH = path.resolve(__dirname, '../dist/esm/myLib.js.map');
 
 describe('Bundle result', () => {
 
