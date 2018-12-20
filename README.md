@@ -5,14 +5,16 @@ This is a repo that setup the basic structure for my (and your) next typescript 
 
 ### What it does
 - Use typescript compiler to compile your library into:
-  - `lib` directory for commonjs code to consume
-  - `lib-esm` directory for es2015 code to consume
+  - `dist/commonjs` directory for commonjs code to consume
+  - `dist/esm` directory for es2015 code to consume
 - Use webpack version 4 to bundle the code into:
-  - `bundle` directory as an UMD module for others 
-- Setup npm scripts for easy build
-  - `npm run dev` to compile to above directories
-  - `npm run dev:watch` to watch the file changes (by nodemon) and run the build script
-  - `npm run build` to generate minimized code for publish
+  - `dist` directory as an UMD module for others 
+- Setup yarn scripts for easy build
+  - `yarn run dev` to compile to UMD module with `webpack`
+  - `yarn run dev:tsc` to compile to commonjs and es6 modules with `tsc`
+  - `yarn run dev:watch` to watch the file changes (by nodemon) and run the `dev` script
+  - `yarn run build` to generate minimized code for publish using `webpack`
+  - `yarn test` to run test against bundle results, library and demo
 
 ## Useful links
 - Refer to [tslint config](https://palantir.github.io/tslint/usage/configuration/) for tslint configuration details

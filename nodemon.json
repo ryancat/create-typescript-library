@@ -1,8 +1,6 @@
 {
   "ignore": [
-    "./lib/", 
-    "./lib-esm/", 
-    "./bundles/", 
+    "./dist/", 
     "./README.md"
   ],
   "watch": [
