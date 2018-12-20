@@ -23,7 +23,7 @@ module.exports = function (env, argv) {
       extensions: ['.ts', '.tsx', '.js']
     },
     
-    devtool: 'inline-source-map',
+    devtool: mode === 'production' ? '' : 'inline-source-map',
     
     module: {
       rules: [{
