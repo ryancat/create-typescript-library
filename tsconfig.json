@@ -61,11 +61,12 @@
     "node_modules",
     "dist",
     "demo",
-    "**/*.test.ts"
+    "**/*.test.ts",
+    "**/webpack.config.ts"
   ],
   "compilation": {
     "compiler": {
-      "context": "./",
+      "context": "./src",
       "outputPath": "./dist"
     }
   }
