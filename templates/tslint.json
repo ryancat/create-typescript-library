@@ -6,7 +6,7 @@
   "jsRules": {},
   "rules": {
     "quotemark": [true, "single", "avoid-escape", "avoid-template"],
-    "no-console": [false],
+    "no-console": [true, "log"],
     "object-literal-sort-keys": [false],
     "ordered-imports": [
       true,
