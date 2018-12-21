@@ -18,6 +18,20 @@ const CWD = process.cwd();
 const packageJsonPath = path.resolve(CWD, './package.json');
 const templatesPath = path.resolve(__dirname, '../templates');
 
+const runtimeState = {
+  get packageJson() {
+    return JSON.parse(fs.readFileSync(packageJsonPath, { encoding: 'utf8' }));
+  },
+
+  get destEntryFilePath() {
+    const entryFilePath = path.resolve(CWD, this.packageJson.main);
+    const entryFileName = path.basename(entryFilePath);
+    const entryFileExt = path.extname(entryFileName);
+    const entryFileDir = path.resolve(entryFilePath, '../');
+    return path.resolve(entryFileDir, entryFileName.replace(entryFileExt, '.ts'));
+  },
+};
+
 // Receive argv
 
 // hasDemo: boolean;
@@ -64,33 +78,44 @@ async function addDependencyManager() {
   });
 }
 
-async function addSourceCode() {
-  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, { encoding: 'utf8' }));
+function addSourceCode() {
+  const destEntryFilePath = runtimeState.destEntryFilePath;
+  const destEntryFileDir = path.resolve(destEntryFilePath, '../');
+  const destEntryTestFileDir = destEntryFileDir;
+  const destEntryFileName = path.basename(destEntryFilePath);
+  const destEntryTestFilePath = path.resolve(destEntryFileDir, `${destEntryFileName.slice(0, -3)}.test.ts`);
+  const fromTestFileToEntryFilePath = `./${path.relative(destEntryTestFileDir, destEntryFilePath).slice(0, -3)}`;
 
-  console.log('packageJson', packageJson);
-  const entryFilePath = path.resolve(CWD, packageJson.main);
-  const entryFileName = path.basename(entryFilePath);
-  const entryFileExt = path.extname(entryFileName);
-  const entryFileDir = path.resolve(entryFilePath, '../');
-  const entryTestFileDir = entryFileDir;
-  const destEntryFilePath = path.resolve(entryFileDir, entryFileName.replace(entryFileExt, '.ts'));
-  const destEntryTestFilePath = path.resolve(entryFileDir, entryFileName.replace(entryFileExt, '.test.ts'));
-  // Instead of import from 'myLib', we need to add relative path to differenciate dependent packages
-  const fromTestFileToEntryFilePath = `./${path.relative(entryTestFileDir, destEntryFilePath)}`.replace('.ts', '');
-
-  console.log('fromTestFileToEntryFilePath', `./${path.relative(entryTestFileDir, destEntryFilePath)}`);
-
-  // Create entry file in the path given by package.json
+  // Create entry file and test file in the path given by package.json
+  shell.mkdir('-p', destEntryFileDir);
   shell.cp(path.resolve(templatesPath, './src/myLib.ts.tmpl'), destEntryFilePath);
+  shell.mkdir('-p', destEntryTestFileDir);
   shell.cp(path.resolve(templatesPath, './src/myLib.test.ts.tmpl'), destEntryTestFilePath);
-  console.log(destEntryTestFilePath, destEntryFilePath);
   shell.sed('-i', '{{entryFilePath}}', fromTestFileToEntryFilePath, destEntryTestFilePath);
+}
 
+function addBundler() {
+  const packageJson = runtimeState.packageJson;
+  const libName = packageJson.name;
+  const destEntryFilePath = runtimeState.destEntryFilePath;
+
+  switch (config.bundler) {
+    case 'webpack':
+      const webpackConfigPath = path.resolve(CWD, './webpack.config.ts');
+      shell.cp(path.resolve(templatesPath, './webpack.config.ts.tmpl'), webpackConfigPath);
+      shell.sed('-i', '{{libName}}', libName, webpackConfigPath);
+      shell.sed('-i', '{{entryFilePath}}', `./${path.relative(CWD, destEntryFilePath)}`, webpackConfigPath);
+      break;
+
+    default:
+      throw new Error(`Invalid bundler: ${config.bundler}`);
+  }
 }
 
 async function main() {
   await addDependencyManager();
-  await addSourceCode();
+  addSourceCode();
+  addBundler();
 }
 
 main();
