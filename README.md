@@ -1,5 +1,5 @@
 ## create-ts-library
-[![Build Status](https://travis-ci.com/ryancat/create-ts-library.svg?branch=master)](https://travis-ci.com/ryancat/create-ts-library)
+[![Build Status](https://travis-ci.com/ryancat/create-ts-library.svg?branch=master)](https://travis-ci.com/ryancat/create-ts-library) [![codecov](https://codecov.io/gh/ryancat/create-ts-library/branch/master/graph/badge.svg)](https://codecov.io/gh/ryancat/create-ts-library)
 
 This is a repo that setup the basic structure for my (and your) next typescript library. Simply **fork it** and start coding!
 

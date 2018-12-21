@@ -12,6 +12,7 @@
     "build": "npm run tslint && webpack --mode production",
     "build:tsc": "npm run dev:tsc",
     "test": "npm run clean && jest && yarn run demo:test && npm run clean",
+    "test:coverage": "npm run clean && jest --coverage && yarn run demo:test && npm run clean",
     "demo:test": "yarn run build && cd demo && yarn install && yarn test",
     "clean": "rm -rf dist"
   },

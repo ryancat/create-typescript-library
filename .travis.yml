@@ -1,5 +1,11 @@
 language: node_js
 node_js:
-  - 'node'
+  - node
 script:
-  - yarn test
+  - yarn global add codecov
+  - yarn test:coverage
+after_success:
+  - codecov
+env:
+  global:
+    secure: L2D5g/9DPaWfHveQSucmCzq24gRhEXdpiY4drXFsQYxGqu+vvx0BED20r3cqwnjh6FzDTbCztESqqSn2p9ZzP1mQpu2+GiiKBSUAGBlnqmh6pXB49LR/VGONBx6EHAuC/K2aPOWoCWGVujtaAfHnPUBM6GnFZ/y7nX58Tv0g7dejhGq0fqC2gTTa2t+sFn8b7KbIW6V1wta2iPXaQXNbTq9uf9FlwoA3RFkgj5OCpqVedlhOX0vlLLn4GaeZy53FCBHKlxnUTNrGF64Vr3hU2dy65ZVHO3dcO8/9ECUaE56Ihgk2BBgScIvpjwIf1qKiTTPZqYpQsDg4JHZPFUZkA5XVUeIWO/q8pg2+94Dz4Xo1q4JKIENkH9tTcla4kHZmvTe85dQ/4oH9Vtvw3h5fbfQXSgDtjjZqNkyV+wONzO6jugbYIiRfrbUrotcH+vb4amglzw3cDs+R/dKxWmvi2M7RYsmPTkdylBqkZ/iaHu9bfVQDR8mrAAqqGSJWKcxaIDETFdRV1P5vQOCwRgFZiWUxir9nzHCGhVNeJJpINI36GhXUKbxK8J5HbQgC4XAfwFEO7chlf1TUrGD8OU52Q38VpGqOlB/ryOXdcF6WuXfULm3D0xu9wvbfNjnaXX6n49rlsDEbkMLUZCnpNbMQ8Pn5RiinegmhBz3cRyaiPa8=
