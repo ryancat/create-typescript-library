@@ -4,10 +4,11 @@
     "./README.md",
     "./node_modules/",
     "./yarn*",
-    "./coverage"
+    "./coverage",
+    "./temp/"
   ],
   "watch": [
     "./"
   ],
-  "ext": "js,json,ts,tsx"
+  "ext": "js,json,ts,tsx,tmpl"
 }

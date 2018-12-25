@@ -1,0 +1,27 @@
+{
+  "name": "{{libName}}",
+  "version": "0.0.1",
+  "description": "{{libDesc}}",
+  "main": "./dist/{{libName}}.min.js",
+  "types": "./dist/{{libName}}.d.ts",
+  "scripts": {
+    "dev": "{{dependencyManager}} run tslint && {{tscScript}}",
+    "dev:watch": "nodemon --exec '{{dependencyManager}} run dev || exit 1'",
+    "tslint": "tslint --project .",
+    "build": "{{dependencyManager}} run dev && uglifyjs ./dist/{{libName}}.js -o ./dist/{{libName}}.min.js",
+    "test": "{{dependencyManager}} run clean && {{testScript}} && {{dependencyManager}} run clean",
+    "test:coverage": "{{dependencyManager}} run clean && {{testCoverageScript}} && {{dependencyManager}} run clean",
+    "clean": "rm -rf dist"
+  },
+  "author": "{{author}}",
+  "license": "{{license}}",
+  "devDependencies": {
+    "@types/jest": "^23.3.7",
+    "jest": "^23.6.0",
+    "nodemon": "^1.17.5",
+    "ts-jest": "^23.10.4",
+    "tslint": "^5.10.0",
+    "typescript": "^2.9.2",
+    "uglify-js": "^3.4.9"
+  }
+}

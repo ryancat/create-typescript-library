@@ -65,7 +65,8 @@
     "**/*.test.ts",
     "**/webpack.config.ts",
     "templates",
-    "config.ts"
+    "config.ts",
+    "temp"
   ],
   "compilation": {
     "compiler": {

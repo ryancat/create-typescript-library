@@ -1,0 +1,38 @@
+
+import 'jest';
+import webpack from 'webpack';
+import configCallback from '../webpack.config';
+
+describe('webpack bundle result', () => {
+  test('should generate {{libName}}.js and {{libName}}.d.ts in development mode', (done) => {
+    // Run webpack
+    webpack(configCallback({}, { mode: 'development' }), (err, stats) => {
+      // Fail test if error
+      if (err) {
+        throw new Error('webpack failed to run given configuration');
+        done();
+      }
+
+      // Map assets to fileNames
+      const fileNames: string = stats.toJson().assets.map((asset: any) => asset.name);
+      expect(fileNames).toEqual(expect.arrayContaining(['{{libName}}.js', '{{libName}}.d.ts']));
+      done();
+    });
+  });
+
+  test('should generate {{libName}}.min.js and {{libName}}.d.ts in production mode', (done) => {
+    // Run webpack
+    webpack(configCallback({}, { mode: 'production' }), (err, stats) => {
+      // Fail test if error
+      if (err) {
+        throw new Error('webpack failed to run given configuration');
+        done();
+      }
+
+      // Map assets to fileNames
+      const fileNames: string = stats.toJson().assets.map((asset: any) => asset.name);
+      expect(fileNames).toEqual(expect.arrayContaining(['{{libName}}.min.js', '{{libName}}.d.ts']));
+      done();
+    });
+  });
+});
