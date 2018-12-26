@@ -1,23 +1,23 @@
 {
-  "name": "create-ts-library",
+  "name": "create-typescript-library",
   "version": "1.0.0",
   "description": "nodejs executable for creating typescript library",
   "main": "./dist/main.min.js",
   "types": "./dist/main.d.ts",
   "bin": {
-    "create-ts-library": "./bin/create-ts-library"
+    "create-typescript-library": "./bin/create-typescript-library"
   },
   "scripts": {
-    "dev": "npm run tslint && webpack --mode development",
-    "dev:watch": "nodemon --exec 'npm run dev || exit 1'",
+    "dev": "yarn run tslint && webpack --mode development",
+    "dev:watch": "nodemon --exec 'yarn run dev || exit 1'",
     "tslint": "tslint --project .",
-    "build": "npm run tslint && webpack --mode production",
-    "test": "npm run clean && jest && npm run clean",
-    "test:coverage": "npm run clean && jest --coverage && npm run clean",
+    "build": "yarn run tslint && webpack --mode production",
+    "test": "yarn run clean && jest && yarn run clean",
+    "test:coverage": "yarn run clean && jest --coverage && yarn run clean",
     "demo:test": "yarn run build && cd demo && yarn install && yarn test",
     "clean": "rm -rf dist"
   },
-  "repository": "https://github.com/ryancat/create-ts-library.git",
+  "repository": "https://github.com/ryancat/create-typescript-library.git",
   "author": "Ryan Chen <xryanchen@gmail.com>",
   "license": "MIT",
   "devDependencies": {
