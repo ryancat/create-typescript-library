@@ -4,14 +4,13 @@
 // expected typescript project
 
 // Third party libraries
-import { spawn } from 'child_process';
 import fs from 'fs';
+import inquirer from 'inquirer';
 import path from 'path';
 import shell from 'shelljs';
 
 // Self information
 import { tscConfig, webpackConfig, IBundlerConfig, ITscConfig } from './config';
-// import { version } from './package.json';
 
 // Constants
 const CWD = process.cwd();
@@ -19,39 +18,6 @@ const PACKAGE_JSON_PATH = path.resolve(CWD, './package.json');
 const TEMPLATES_PATH = path.resolve(__dirname, '../templates');
 
 // Utils
-// function copyTemplateFile(filePath: string, rename?: string): string {
-//   const dirPath = path.resolve(filePath, '../');
-//   let destFilePath = path.resolve(CWD, filePath);
-
-//   if (rename) {
-//     destFilePath = path.resolve(dirPath, `./${rename}`);
-//   }
-
-//   shell.mkdir('-p', path.resolve(CWD, dirPath));
-//   shell.cp(path.resolve(TEMPLATES_PATH, filePath), destFilePath);
-//   return destFilePath;
-// }
-
-// function copyAndSedTemplateFile(filePath: string, sedMap: {[key: string]: string}) {
-//   const destFilePath = copyTemplateFile(filePath);
-
-//   for (const sedKey in sedMap) {
-//     if (sedMap.hasOwnProperty(sedKey)) {
-//       shell.sed('-i', `{{${sedKey}}}`, sedMap[sedKey], destFilePath);
-//     }
-//   }
-// }
-
-// function copyAndRenameAndSedTemplateFile(filePath: string, rename: string, sedMap: {[key: string]: string}) {
-//   const destFilePath = copyTemplateFile(filePath, rename);
-
-//   for (const sedKey in sedMap) {
-//     if (sedMap.hasOwnProperty(sedKey)) {
-//       shell.sed('-i', `{{${sedKey}}}`, sedMap[sedKey], destFilePath);
-//     }
-//   }
-// }
-
 function copyTemplatesFile(filePath: string, options: { rename?: string, sedMap?: {[key: string]: string} } = {}) {
   const {
     rename,
@@ -75,93 +41,6 @@ function copyTemplatesFile(filePath: string, options: { rename?: string, sedMap?
     }
   }
 }
-
-// const runtimeState = {
-//   get packageJson() {
-//     return JSON.parse(fs.readFileSync(PACKAGE_JSON_PATH, { encoding: 'utf8' }));
-//   },
-
-//   get destEntryFilePath() {
-//     const entryFilePath = path.resolve(CWD, this.packageJson.main);
-//     const entryFileName = path.basename(entryFilePath);
-//     const entryFileExt = path.extname(entryFileName);
-//     const entryFileDir = path.resolve(entryFilePath, '../');
-//     return path.resolve(entryFileDir, entryFileName.replace(entryFileExt, '.ts'));
-//   },
-// };
-
-// Receive argv
-
-// hasDemo: boolean;
-//   hasTest: boolean;
-//   hasTsLint: boolean;
-// bundler: 'webpack'; // TODO: 'parcel' | 'browserify' | 'webpack'
-//   dependencyManager: 'yarn'; // TODO: 'npm' | 'yarn'
-//   outputUmdBundle: boolean;
-//   outputEs6Module: boolean;
-//   outputCommonJsModule: boolean;
-
-// From config, we need to pick templates to composite the targetting project
-
-// async function addDependencyManager() {
-//   return new Promise((resolve, reject) => {
-//     switch (config.dependencyManager) {
-//       case 'yarn':
-//         spawn('yarn init', {
-//           stdio: 'inherit',
-//           shell: true,
-//         })
-//         // For normal close of child process
-//         .on('close', (code) => {
-//           if (code > 0) {
-//             // Error case
-//             reject(code);
-//           }
-
-//           resolve(code);
-//         })
-//         // For control-c terminate
-//         .on('SIGINT', () => {
-//           console.log('Terminate setup for now. Bye!');
-//           process.exit();
-//         });
-//         break;
-
-//       default:
-//         throw new Error(`Invalid depenencyManager: ${config.dependencyManager}`);
-//     }
-//   });
-// }
-
-// function getBundlerPackageJsonPath(runtimeConfig: IBundlerConfig) {
-//   let packageJsonPath;
-
-//   switch (runtimeConfig.bundler) {
-//     case 'webpack':
-//       packageJsonPath = path.resolve(TEMPLATES_PATH, './package.webpack.tmpl');
-//       break;
-
-//     default:
-//       throw new Error(`Invalid bundler: ${runtimeConfig.bundler}`);
-//   }
-
-//   return packageJsonPath;
-// }
-
-// function getTscPackageJsonPath(bundler: typeof config.bundler) {
-//   let packageJsonPath;
-
-//   switch (bundler) {
-//     case 'webpack':
-//       packageJsonPath = path.resolve(TEMPLATES_PATH, './package.webpack.tmpl');
-//       break;
-
-//     default:
-//       throw new Error(`Invalid bundler: ${bundler}`);
-//   }
-
-//   return packageJsonPath;
-// }
 
 async function getRuntimeConfig(type: 'webpack' | 'tsc' = 'webpack') {
   switch (type) {
@@ -363,8 +242,86 @@ function updatePackageJson(callback: (packageJson: any) => object) {
   setPackageJson(callback(getPackageJson()));
 }
 
+//   // repository: string;
+//   // compileMethod: 'bundler' | 'tsc';
+//   // bundler: 'webpack'; // TODO: 'parcel' | 'browserify' | 'webpack'
+//   // tsCompileModule: 'none' | 'commonjs' | 'amd' | 'system' | 'umd' | 'es2015' | 'ESNext';
+
+async function askRuntimeConfig() {
+  return inquirer
+  .prompt([{
+    type: 'input',
+    name: 'libName',
+    message: 'What\'s the name of your library?',
+  }, {
+    type: 'input',
+    name: 'libDesc',
+    message: (answers: any) => `Great! What does ${answers.libName} do?`,
+  }, {
+    type: 'list',
+    name: 'license',
+    message: 'Should we use MIT license?',
+    choices: ['MIT'], // 'MIT', 'GNU', 'Apache', 'other'
+    default: 'MIT',
+  }, {
+    type: 'confirm',
+    name: 'isExecutable',
+    message: (answers: any) => `Is ${answers.libName} a NodeJS executable?`,
+  }, {
+    type: 'list',
+    name: 'dependencyManager',
+    message: 'How do you want to manage code dependencies?',
+    choices: ['yarn', 'npm'],
+    default: 'yarn',
+  }, {
+    type: 'list',
+    name: 'compileMethod',
+    message: 'How do you want to compile your codes?',
+    choices: ['bundler', 'tsc'],
+    default: 'bundler',
+  }, {
+    type: 'list',
+    name: 'bundler',
+    message: 'Let\'s bundle the code! Which code bundler do you want to use?',
+    choices: ['webpack'], // 'parcel' | 'browserify' | 'webpack'
+    default: 'webpack',
+    when: (answers: any) => answers.compileMethod === 'bundler',
+  }, {
+    type: 'list',
+    name: 'tsCompileModule',
+    message: 'Let\'s use typescirpt compiler! Which consumer you are targeting?',
+    choices: ['commonjs', 'es6'], // 'parcel' | 'browserify' | 'webpack'
+    default: 'commonjs',
+    when: (answers: any) => answers.compileMethod === 'tsc',
+  }, {
+    type: 'confirm',
+    name: 'hasTest',
+    message: 'Should we include tests for the library?',
+  }, {
+    type: 'list',
+    name: 'testRunner',
+    message: 'Sure! Which test runner should we use?',
+    choices: ['jest'], // 'jest', 'mocha'
+    when: (answers: any) => !!answers.hasTest,
+  }, {
+    type: 'confirm',
+    name: 'hasTsLint',
+    message: 'Should we include tslint for the library?',
+  }, {
+    type: 'confirm',
+    name: 'hasDemo',
+    message: 'Should we include a demo directory for the library?',
+  }, {
+    type: 'input',
+    name: 'author',
+    message: 'Sounds good. Now, who are you?',
+    default: 'Awesome Anonymous <awesome-anonymous@mymail.com>',
+  }]);
+}
+
 async function main() {
-  const runtimeConfig = await getRuntimeConfig('tsc');
+  // const runtimeConfig = await getRuntimeConfig('tsc');
+  const runtimeConfig = await askRuntimeConfig();
 
   console.log('runtimeConfig', runtimeConfig);
   const {
@@ -485,4 +442,8 @@ async function main() {
   });
 }
 
-main();
+try {
+  main();
+} catch (err) {
+  throw new Error(err);
+}

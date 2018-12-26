@@ -21,7 +21,6 @@ export interface IConfig {
 export interface IBundlerConfig extends IConfig {
   compileMethod: 'bundler';
   bundler: 'webpack'; // TODO: 'parcel' | 'browserify' | 'webpack'
-  outputUmdBundle: boolean;
 }
 
 export interface ITscConfig extends IConfig {
@@ -43,7 +42,6 @@ export const webpackConfig: IBundlerConfig = {
   compileMethod: 'bundler',
   bundler: 'webpack',
   dependencyManager: 'yarn',
-  outputUmdBundle: true,
 };
 
 export const tscConfig: ITscConfig = {

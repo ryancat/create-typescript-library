@@ -15,8 +15,17 @@
     "test": "yarn run clean && jest && yarn run clean",
     "test:coverage": "yarn run clean && jest --coverage && yarn run clean",
     "demo:test": "yarn run build && cd demo && yarn install && yarn test",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "preversion": "yarn run test",
+    "version": "yarn run build && git add -A dist"
   },
+  "files": [
+    "bin",
+    "dist",
+    "templates",
+    "LICENSE",
+    "README.md"
+  ],
   "repository": "https://github.com/ryancat/create-typescript-library.git",
   "author": "Ryan Chen <xryanchen@gmail.com>",
   "license": "MIT",
