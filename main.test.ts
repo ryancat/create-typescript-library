@@ -20,22 +20,37 @@ describe('create-typescript-library', () => {
       shell.mkdir(testTempDir);
       shell.cd(testTempDir);
 
-      test(path.basename(configFilePath), (done) => {
+      const testName = path.basename(configFilePath);
+      test(testName, (done) => {
         main(configJson)
         .then(() => {
-          spawn('yarn && yarn test', {
+          let script: string;
+          switch (configJson.dependencyManager) {
+            case 'yarn':
+              script = 'yarn && yarn test';
+              break;
+
+            case 'npm':
+              script = 'npm install && npm run test';
+              break;
+
+            default:
+              throw new Error('Invalid dependency manager tool');
+          }
+
+          spawn(script, {
             shell: true,
             stdio: 'inherit',
             cwd: testTempDir,
           })
           .on('exit', (code: number) => {
             if (code > 0) {
-              throw new Error(`jest test failed with code ${code}`);
+              throw new Error(`${testName} failed with code ${code}`);
             }
             done();
           });
         });
-      }, 300000);
+      }, 300000); // give enough min timeout to run the bundle and test scripts
     });
   });
 });

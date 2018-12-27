@@ -443,6 +443,9 @@ export async function main(runtimeConfig?: IConfig) {
 
   copyTemplatesFile('./.travis.yml.tmpl', {
     rename: '.travis.yml',
+    sedMap: {
+      dependencyManager,
+    },
   });
 
   copyTemplatesFile('./jest.config.js.tmpl', {

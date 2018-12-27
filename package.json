@@ -8,16 +8,18 @@
     "create-typescript-library": "./bin/create-typescript-library"
   },
   "scripts": {
-    "dev": "yarn run tslint && webpack --mode development",
-    "dev:watch": "nodemon --exec 'yarn run dev || exit 1'",
+    "dev": "npm run tslint && webpack --mode development",
+    "dev:watch": "nodemon --exec 'npm run dev || exit 1'",
     "tslint": "tslint --project .",
-    "build": "yarn run tslint && webpack --mode production",
-    "test": "yarn run clean && jest && yarn run clean",
-    "test:coverage": "yarn run clean && jest --coverage && yarn run clean",
-    "demo:test": "yarn run build && cd demo && yarn install && yarn run add-self && yarn test",
+    "build": "npm run tslint && webpack --mode production",
+    "test": "npm run clean && jest && npm run clean",
+    "test:coverage": "npm run clean && jest --coverage && npm run clean",
+    "demo:test": "npm run build && cd demo && npm install && npm run add-self && npm test",
     "clean": "rm -rf dist test-temp",
-    "preversion": "yarn run test",
-    "version": "yarn run build && git add -A dist"
+    "version:commit": "git add . && VERSION=`node -p \"require('./package.json').version\"` && git commit -m \"bump version to $VERSION\"",
+    "version:patch": "npm version --no-git-tag-version patch && npm run version:commit",
+    "version:minor": "npm version --no-git-tag-version minor && npm run version:commit",
+    "version:major": "npm version --no-git-tag-version major && npm run version:commit"
   },
   "files": [
     "bin",

@@ -4,6 +4,7 @@
     "./README.md",
     "./node_modules/",
     "./yarn*",
+    "./npm*",
     "./coverage",
     "./temp/"
   ],
