@@ -35,7 +35,7 @@ describe('create-typescript-library', () => {
             done();
           });
         });
-      }, 180000);
+      }, 300000);
     });
   });
 });
