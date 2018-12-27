@@ -1,2 +1,8 @@
 #!/usr/bin/env node
-require('../dist/main.min.js')
+const { main } = require('../dist/main.min.js');
+
+try {
+  main();
+} catch (err) {
+  throw new Error(err);
+}

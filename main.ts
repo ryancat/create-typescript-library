@@ -9,16 +9,41 @@ import inquirer from 'inquirer';
 import path from 'path';
 import shell from 'shelljs';
 
-// Self information
-import { tscConfig, webpackConfig, IBundlerConfig, ITscConfig } from './config';
+// Interfaces
+export interface IBaseConfig {
+  libName: string;
+  libDesc: string;
+  hasDemo: boolean;
+  hasTest: boolean;
+  hasTsLint: boolean;
+  isExecutable: boolean;
+  author: string;
+  license: 'MIT' | 'GNU' | 'Apache' | 'other'; // TODO: add more licence options
+  testRunner: 'jest'; // TODO: 'mocha' | 'jest'
+  dependencyManager: 'yarn'; // TODO: 'npm' | 'yarn'
+}
+
+export interface IBundlerConfig extends IBaseConfig {
+  compileMethod: 'bundler';
+  bundler: 'webpack'; // TODO: 'parcel' | 'browserify' | 'webpack'
+}
+
+export interface ITscConfig extends IBaseConfig {
+  compileMethod: 'tsc';
+  tsCompileModule: 'commonjs' | 'es6'; // 'none' | 'commonjs' | 'amd' | 'system' | 'umd' | 'es2015' | 'es6' | 'ESNext';
+}
+
+export type IConfig = IBundlerConfig | ITscConfig;
 
 // Constants
-const CWD = process.cwd();
+const CWD = process.env.NODE_ENV === 'production' ? process.cwd() : path.resolve(__dirname, './test-temp');
 const PACKAGE_JSON_PATH = path.resolve(CWD, './package.json');
-const TEMPLATES_PATH = path.resolve(__dirname, '../templates');
+const TEMPLATES_PATH = path.resolve(__dirname, process.env.NODE_ENV === 'production' ? '../templates' : './templates');
 
 // Utils
-function copyTemplatesFile(filePath: string, options: { rename?: string, sedMap?: {[key: string]: string} } = {}) {
+export function copyTemplatesFile(
+  filePath: string,
+  options: { rename?: string, sedMap?: {[key: string]: string} } = {}) {
   const {
     rename,
     sedMap,
@@ -42,17 +67,7 @@ function copyTemplatesFile(filePath: string, options: { rename?: string, sedMap?
   }
 }
 
-async function getRuntimeConfig(type: 'webpack' | 'tsc' = 'webpack') {
-  switch (type) {
-    case 'webpack':
-      return webpackConfig;
-
-    case 'tsc':
-      return tscConfig;
-  }
-}
-
-function addBundlerPackageJson(runtimeConfig: IBundlerConfig) {
+export function addBundlerPackageJson(runtimeConfig: IBundlerConfig) {
   const {
     bundler,
     dependencyManager,
@@ -81,7 +96,7 @@ function addBundlerPackageJson(runtimeConfig: IBundlerConfig) {
   }
 }
 
-function addTscPackageJson(runtimeConfig: ITscConfig) {
+export function addTscPackageJson(runtimeConfig: ITscConfig) {
   const {
     dependencyManager,
     libName,
@@ -119,7 +134,7 @@ function addTscPackageJson(runtimeConfig: ITscConfig) {
 /**
  * Add package.json file based on config
  */
-function addPackageJson(runtimeConfig: ITscConfig | IBundlerConfig) {
+export function addPackageJson(runtimeConfig: IConfig) {
   switch (runtimeConfig.compileMethod) {
     case 'bundler':
       addBundlerPackageJson(runtimeConfig);
@@ -134,15 +149,19 @@ function addPackageJson(runtimeConfig: ITscConfig | IBundlerConfig) {
   }
 }
 
-function addSourceCode(runtimeConfig: IBundlerConfig | ITscConfig) {
-  const destEntryFileDir = path.resolve(CWD, './src');
-  const destEntryFilePath = path.resolve(destEntryFileDir, `./${runtimeConfig.libName}.ts`);
+export function addSourceCode(runtimeConfig: IConfig) {
+  // const destEntryFileDir = path.resolve(CWD, './src');
+  // const destEntryFilePath = path.resolve(destEntryFileDir, `./${runtimeConfig.libName}.ts`);
 
-  shell.mkdir('-p', destEntryFileDir);
-  shell.cp(path.resolve(TEMPLATES_PATH, './src/myLib.ts.tmpl'), destEntryFilePath);
+  // shell.mkdir('-p', destEntryFileDir);
+  // shell.cp(path.resolve(TEMPLATES_PATH, './src/myLib.ts.tmpl'), destEntryFilePath);
+
+  copyTemplatesFile('./src/myLib.ts.tmpl', {
+    rename: `${runtimeConfig.libName}.ts`,
+  });
 }
 
-function addTestCodeForBundler(runtimeConfig: IBundlerConfig) {
+export function addTestCodeForBundler(runtimeConfig: IBundlerConfig) {
   copyTemplatesFile('./tests/bundler.webpack.test.ts.tmpl', {
     rename: 'bundler.webpack.test.ts',
     sedMap: {
@@ -151,7 +170,7 @@ function addTestCodeForBundler(runtimeConfig: IBundlerConfig) {
   });
 }
 
-function addTestCodeForTsc(runtimeConfig: ITscConfig) {
+export function addTestCodeForTsc(runtimeConfig: ITscConfig) {
   const {
     libName,
     dependencyManager,
@@ -180,7 +199,7 @@ function addTestCodeForTsc(runtimeConfig: ITscConfig) {
   }
 }
 
-function addTestCode(runtimeConfig: IBundlerConfig | ITscConfig) {
+export function addTestCode(runtimeConfig: IConfig) {
   // Add test for entry file
   const {
     libName,
@@ -209,7 +228,7 @@ function addTestCode(runtimeConfig: IBundlerConfig | ITscConfig) {
   }
 }
 
-function addBundler(runtimeConfig: IBundlerConfig) {
+export function addBundler(runtimeConfig: IBundlerConfig) {
   const libName = runtimeConfig.libName;
 
   switch (runtimeConfig.bundler) {
@@ -228,26 +247,21 @@ function addBundler(runtimeConfig: IBundlerConfig) {
   }
 }
 
-function getPackageJson() {
+export function getPackageJson() {
   return JSON.parse(fs.readFileSync(PACKAGE_JSON_PATH, {
     encoding: 'utf8',
   }));
 }
 
-function setPackageJson(packageJson: object) {
+export function setPackageJson(packageJson: object) {
   fs.writeFileSync(PACKAGE_JSON_PATH, JSON.stringify(packageJson, null, 2));
 }
 
-function updatePackageJson(callback: (packageJson: any) => object) {
+export function updatePackageJson(callback: (packageJson: any) => object) {
   setPackageJson(callback(getPackageJson()));
 }
 
-//   // repository: string;
-//   // compileMethod: 'bundler' | 'tsc';
-//   // bundler: 'webpack'; // TODO: 'parcel' | 'browserify' | 'webpack'
-//   // tsCompileModule: 'none' | 'commonjs' | 'amd' | 'system' | 'umd' | 'es2015' | 'ESNext';
-
-async function askRuntimeConfig() {
+export async function askRuntimeConfig(): Promise<IConfig> {
   return inquirer
   .prompt([{
     type: 'input',
@@ -319,11 +333,17 @@ async function askRuntimeConfig() {
   }]);
 }
 
-async function main() {
-  // const runtimeConfig = await getRuntimeConfig('tsc');
-  const runtimeConfig = await askRuntimeConfig();
+export async function main(runtimeConfig?: IConfig) {
+  if (!runtimeConfig) {
+    runtimeConfig = await askRuntimeConfig();
+  }
 
-  console.log('runtimeConfig', runtimeConfig);
+  if (process.env.NODE_ENV === 'development') {
+    console.log('Create typescript library with runtime config');
+    console.log('---------------------------------------------');
+    console.log(JSON.stringify(runtimeConfig, null, 2));
+  }
+
   const {
     author,
     libName,
@@ -350,7 +370,6 @@ async function main() {
   }
 
   if (runtimeConfig.hasDemo) {
-    console.log('hasDemo', runtimeConfig.hasDemo);
     copyTemplatesFile('./demo/demo.ts.tmpl', {
       rename: 'demo.ts',
       sedMap: {
@@ -375,6 +394,7 @@ async function main() {
     });
 
     // Update package.json test script
+    console.log('PACKAGE_JSON_PATH', PACKAGE_JSON_PATH);
     shell.sed('-i', '{{testScript}}', `jest && ${dependencyManager} run demo:test`, PACKAGE_JSON_PATH);
     shell.sed('-i', '{{testCoverageScript}}',
       `jest --coverage && ${dependencyManager} run demo:test`, PACKAGE_JSON_PATH);
@@ -440,10 +460,4 @@ async function main() {
       libDesc,
     },
   });
-}
-
-try {
-  main();
-} catch (err) {
-  throw new Error(err);
 }
