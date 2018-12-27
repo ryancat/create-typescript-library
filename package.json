@@ -1,6 +1,6 @@
 {
   "name": "create-typescript-library",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "nodejs executable for creating typescript library",
   "main": "./dist/main.min.js",
   "types": "./dist/main.d.ts",
