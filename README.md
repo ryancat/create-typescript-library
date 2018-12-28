@@ -12,7 +12,7 @@ Simply run `npx create-typescript-library` in an empty directory where you want 
   - to commonjs code to consume
   - to es2015 code to consume
 - Use webpack version 4 to bundle your library:
-  - to UMD module for others 
+  - to UMD module for others
 - Setup `npm`/`yarn` scripts for easy build
   - `dev` to compile or bundle code
   - `dev:watch` to watch the file changes (by nodemon) and run the `dev` script
