@@ -1,20 +1,23 @@
 ## create-typescript-library
 [![Build Status](https://travis-ci.com/ryancat/create-typescript-library.svg?branch=master)](https://travis-ci.com/ryancat/create-typescript-library) [![codecov](https://codecov.io/gh/ryancat/create-typescript-library/branch/master/graph/badge.svg)](https://codecov.io/gh/ryancat/create-typescript-library)
 
-This is a repo that setup the basic structure for my (and your) next typescript library. Simply **fork it** and start coding!
+This is a nodejs command line util that will setup the basic structure for my (and your) next typescript library.
+
+## How it works?
+Simply run `npx create-typescript-library` in an empty directory where you want to create your typescript library. If you are using `yarn`, run `yarn exec create-typescript-library`.
 
 ### What it does
-- Use typescript compiler to compile your library into:
-  - `dist/commonjs` directory for commonjs code to consume
-  - `dist/esm` directory for es2015 code to consume
-- Use webpack version 4 to bundle the code into:
-  - `dist` directory as an UMD module for others 
-- Setup yarn scripts for easy build
-  - `yarn run dev` to compile to UMD module with `webpack`
-  - `yarn run dev:tsc` to compile to commonjs and es6 modules with `tsc`
-  - `yarn run dev:watch` to watch the file changes (by nodemon) and run the `dev` script
-  - `yarn run build` to generate minimized code for publish using `webpack`
-  - `yarn test` to run test against bundle results, library and demo
+`create-typescript-library` will run an interactive prompt to gather information from you, and generate a basic working typescript library for you. Some examples include:
+- Use typescript compiler (`tsc`) to compile your library:
+  - to commonjs code to consume
+  - to es2015 code to consume
+- Use webpack version 4 to bundle your library:
+  - to UMD module for others 
+- Setup `npm`/`yarn` scripts for easy build
+  - `dev` to compile or bundle code
+  - `dev:watch` to watch the file changes (by nodemon) and run the `dev` script
+  - `build` to generate minimized code for publishing
+  - `test` to run test against bundle results, library and demo
 
 ## Useful links
 - Refer to [tslint config](https://palantir.github.io/tslint/usage/configuration/) for tslint configuration details
