@@ -1,5 +1,3 @@
-// Using typescript configuration is now supported.
-// See https://webpack.js.org/configuration/configuration-languages/#typescript
 import path from 'path';
 import webpack from 'webpack';
 
@@ -11,25 +9,19 @@ const configCallback = (env: {[key: string]: string}, argv: webpack.Configuratio
     mode,
 
     entry: {
-      main: './main.ts',
-    },
-
-    // This tells webpack to not mess up with nodejs native packages
-    // See https://github.com/webpack-contrib/css-loader/issues/447#issuecomment-308918678
-    target: 'node',
-
-    node: {
-      // Do not use publicPath to overwrite __dirname, which is confusing
-      __dirname: false,
+      '{{libName}}': '{{entryFilePath}}',
     },
 
     output: {
       filename: mode === 'production' ? '[name].min.js' : '[name].js',
       path: path.resolve(__dirname, 'dist'),
+      libraryTarget: 'umd',
+      library: '{{libName}}',
+      umdNamedDefine: true,
     },
 
     resolve: {
-      extensions: ['.ts', '.js'],
+      extensions: ['.ts', '.tsx', '.js'],
     },
 
     module: {

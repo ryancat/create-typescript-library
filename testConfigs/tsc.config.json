@@ -1,0 +1,14 @@
+{
+  "libName": "my-lib",
+  "libDesc": "my awesome library",
+  "hasDemo": true,
+  "hasTest": true,
+  "hasTsLint": true,
+  "isExecutable": false,
+  "author": "Awesome Anonymous <awesome-anonymous@mymail.com>",
+  "license": "MIT",
+  "testRunner": "jest",
+  "compileMethod": "tsc",
+  "tsCompileModule": "commonjs",
+  "dependencyManager": "yarn"
+}

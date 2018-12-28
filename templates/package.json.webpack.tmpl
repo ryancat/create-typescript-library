@@ -1,0 +1,33 @@
+{
+  "name": "{{libName}}",
+  "version": "0.0.1",
+  "description": "{{libDesc}}",
+  "main": "./dist/{{libName}}.min.js",
+  "types": "./dist/{{libName}}.d.ts",
+  "scripts": {
+    "dev": "{{dependencyManager}} run tslint && webpack --mode development",
+    "dev:watch": "nodemon --exec '{{dependencyManager}} run dev || exit 1'",
+    "tslint": "tslint --project .",
+    "build": "{{dependencyManager}} run tslint && webpack --mode production",
+    "test": "{{dependencyManager}} run clean && {{testScript}} && {{dependencyManager}} run clean",
+    "test:coverage": "{{dependencyManager}} run clean && {{testCoverageScript}} && {{dependencyManager}} run clean",
+    "clean": "rm -rf dist"
+  },
+  "author": "{{author}}",
+  "license": "{{license}}",
+  "devDependencies": {
+    "@types/jest": "^23.3.7",
+    "@types/node": "^10.12.18",
+    "@types/source-map": "0.5.2",
+    "@types/webpack": "^4.4.21",
+    "jest": "^23.6.0",
+    "nodemon": "^1.17.5",
+    "ts-jest": "^23.10.4",
+    "ts-loader": "^5.2.2",
+    "ts-node": "^7.0.1",
+    "tslint": "^5.10.0",
+    "typescript": "^2.9.2",
+    "webpack": "^4.12.0",
+    "webpack-cli": "^3.0.8"
+  }
+}
