@@ -26,6 +26,7 @@ const configCallback = (env: {[key: string]: string}, argv: webpack.Configuratio
     output: {
       filename: mode === 'production' ? '[name].min.js' : '[name].js',
       path: path.resolve(__dirname, 'dist'),
+      libraryTarget: 'commonjs',
     },
 
     resolve: {
